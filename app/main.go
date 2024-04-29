@@ -20,7 +20,7 @@ type Config struct {
 }
 
 func main() {
-
+	// Get initial config
 	config, err := loadConfig()
 	if err != nil {
 		log.Fatalf("error loading config: %v", err)
@@ -34,18 +34,22 @@ func main() {
 		}
 	}()
 
-	// Invoke other hosts' GET /ping route every Nth amount of time
 	go func() {
 		for {
+			//clear envs
 			os.Clearenv()
+			// reload envs (to be aple apply changes in configmap without pod restarting)
 			config, err = loadConfig()
 			if err != nil {
 				log.Fatalf("error loading config: %v", err)
 			}
+			// // Invoke other hosts' GET /ping route every Nth amount of time
 			for _, host := range config.Hosts {
 				hostName := strings.Split(host, ":")
+				// get all ips for the headless service
 				ips, err := net.LookupIP(hostName[0])
 				fmt.Printf("%v ips connected to the service %v found.\n", len(ips), hostName[0])
+				// make ping
 				for _, ip := range ips {
 					fmt.Printf("contact ip: %v\n", ip.String()+":"+hostName[1])
 					resp, err := http.Get(fmt.Sprintf("http://%s/ping", ip.String()+":"+hostName[1]))
@@ -54,6 +58,7 @@ func main() {
 						continue
 					}
 					defer resp.Body.Close()
+					// output to stdout
 					fmt.Printf("Response from %s: %s\n", ip.String()+":"+hostName[1], readResponseBody(resp))
 				}
 
@@ -61,11 +66,12 @@ func main() {
 					fmt.Printf("unexpected error while looking up ips: %v", err)
 				}
 			}
+			// output to stdout Timeout message
 			fmt.Println("Wait " + strconv.Itoa(config.TimeRange) + " seconds")
 			time.Sleep(time.Duration(config.TimeRange) * time.Second)
 		}
 	}()
-
+	// initial params output
 	fmt.Println("Server started at :" + config.Port)
 	fmt.Println("Ping period: " + strconv.Itoa(config.TimeRange))
 	select {}
