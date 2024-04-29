@@ -1,0 +1,6 @@
+Deployed: 
+{{- range .Values.servers }}
+
+name: {{ .name }}
+service: {{ .name }}-headless
+{{- end }}

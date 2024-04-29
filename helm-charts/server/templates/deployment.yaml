@@ -1,0 +1,36 @@
+{{- range .Values.servers }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-deployment
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}-container
+        image: {{ $.Values.image }}
+        ports:
+        - containerPort: {{ .port }}
+        volumeMounts:
+        - mountPath: /config
+          name: config-volume    
+        resources:
+          {{- .resources | toYaml | nindent 12 }}     
+        {{- with .securityContext }}
+        securityContext: {{ toJson . }}
+        {{- end }}    
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .name }}-configmap
+
+---
+{{- end }}
+

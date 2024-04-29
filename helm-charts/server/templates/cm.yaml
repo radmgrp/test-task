@@ -1,0 +1,14 @@
+{{- range .Values.servers }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}-configmap
+data:
+  .env: |
+    port: {{ .port }}
+    timeRange: {{ .timeRange }}
+    hosts: "{{ range $index, $element := $.Values.servers }}{{ if ne $index 0 }}, {{ end }}{{ $element.name }}-headless:{{ $element.port }}{{ end }}"
+
+---
+{{- end }}
+

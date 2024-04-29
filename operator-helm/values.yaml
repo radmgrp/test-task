@@ -1,0 +1,4 @@
+operator:
+  # image for operator
+  image: radmgrp/operator-test:latest
+  imagePullPolicy: Always

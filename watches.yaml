@@ -1,0 +1,6 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: luxor.tech
+  version: v1
+  kind: Server
+  chart: helm-charts/server
+#+kubebuilder:scaffold:watch

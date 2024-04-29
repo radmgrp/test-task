@@ -1,0 +1,4 @@
+Operator: {{ .Chart.Name }}
+Operator version: {{ .Chart.AppVersion }}
+Chart version: {{ .Chart.Version }}
+Namespace: {{ .Release.Namespace }}

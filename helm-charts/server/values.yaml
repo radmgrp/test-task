@@ -1,0 +1,36 @@
+# image for each ping-server
+image: radmgrp/http-ping:latest
+# configs for each ping-server deployment
+servers: 
+- name: s1
+  replicas: 3
+  port: 8080
+  timeRange: 10
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+- name: s2
+  replicas: 2
+  port: 8081
+  timeRange: 30
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"

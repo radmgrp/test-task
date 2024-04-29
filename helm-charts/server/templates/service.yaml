@@ -1,0 +1,11 @@
+{{- range .Values.servers }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}-headless
+spec:
+  selector:
+    app: {{ .name }}
+  clusterIP: None
+---
+{{- end }}

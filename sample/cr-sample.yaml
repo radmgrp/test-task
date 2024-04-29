@@ -1,0 +1,39 @@
+apiVersion: luxor.tech/v1
+kind: Server
+metadata:
+  name: ping-servers
+spec:
+  image: radmgrp/app:latest
+  servers: 
+    - name: server-1
+      replicas: 5
+      port: 8080
+      timeRange: 10
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 1000
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "200m"
+          memory: "256Mi"
+    - name: server-2
+      replicas: 2
+      port: 8081
+      timeRange: 20
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 1000
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "200m"
+          memory: "256Mi"
